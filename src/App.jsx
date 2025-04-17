@@ -7,6 +7,8 @@ import {useContext} from "react";
 import {AppContext} from "@/context/AppContext.jsx";
 import PublishBlog from "@/pages/PublishBlog.jsx";
 import ArticleView from "@/pages/ArticleView.jsx";
+import FeedByTag from "./pages/FeedByTag.jsx";
+import Register from "./pages/auth/Register.jsx";
 
 function App() {
     const {user} = useContext(AppContext);
@@ -14,10 +16,12 @@ function App() {
       <BrowserRouter>
         <Routes className="font-poppins">
           <Route path="/" element={<Home/>} />
-            <Route path="/feed" element={<Feed/>} />
-            <Route path={"/new-story"} element={ <PublishBlog/>} />
+            <Route path="/feed" element={user ? <Feed/> : <Login/>} />
+            <Route path="/feed/tag/:id" element={user ? <FeedByTag/> : <Login/>} />
+            <Route path={"/new-story"} element={ user ? <PublishBlog/> : <Login/>} />
             <Route path={"/login"} element={user ? <Feed /> :<Login/>} />
-            <Route path={"/article/:id"} element={<ArticleView/>} />
+            <Route path='/register' element={<Register/>}/>
+            <Route path={"/article/:id"} element={user ? <ArticleView/>:<Login/>} />
         </Routes>
         <Toaster />
       </BrowserRouter>

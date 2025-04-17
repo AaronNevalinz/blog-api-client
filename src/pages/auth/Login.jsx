@@ -1,7 +1,7 @@
 import { LoginForm } from "@/components/login-form"
 import hero from '../../assets/images/hero.jpg' 
 import { Link } from "react-router-dom";
-
+import logo from '../../../public/logo.png'
 
 export default function Login() {
     return (
@@ -11,7 +11,12 @@ export default function Login() {
             <div className="flex flex-col gap-4 p-6 md:p-10">
                 <div className="flex justify-center gap-2 md:justify-start">
                     <h1>
-                        <Link className={"bg-gradient-to-r font-bold font-montserrat from-blue-900 to-red-500 inline-block text-transparent bg-clip-text text-2xl"} to="/feed">Reeadsy</Link>
+                        <Link className={"bg-gradient-to-r font-bold font-montserrat from-blue-900 to-red-500 inline-block text-transparent bg-clip-text text-xl "} to="/">
+                            <div className="flex items-center gap-x-2">
+                                <img src={logo} alt="" className="w-8" />
+                                <span>Reeadsy<span className="italic font-black text-2xl">!</span></span>
+                            </div>
+                        </Link>
                     </h1>
                 </div>
                 <div className="flex flex-1 items-center justify-center">

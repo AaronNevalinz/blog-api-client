@@ -103,7 +103,7 @@ export default function ArticleView(){
     return (
         <div className="">
             <Navbar />
-            <div className={"max-w-3xl mx-auto mt-2"}>
+            <div className={"max-w-2xl mx-auto pt-[110px]"}>
                 <div className={"col-span-4 "}>
                     <h1 className={"text-3xl my-4 font-bold font-montserrat text-slate-800"}>
                         {article && (article.title)}
@@ -149,7 +149,7 @@ export default function ArticleView(){
                                                             <AvatarFallback>CN</AvatarFallback>
                                                         </Avatar>
                                                         <div>
-                                                            <h1 className="text-sm font-bold font-montserrat">{user && user}</h1>
+                                                            <h1 className="text-sm font-bold font-montserrat">{user && user.username}</h1>
                                                         </div>
                                                     </div>
 

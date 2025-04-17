@@ -1,15 +1,33 @@
 import Navbar from "@/components/Navbar.jsx";
 import BlogCard from "@/components/BlogCard.jsx";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {AppContext} from "@/context/AppContext.jsx";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useParams } from "react-router-dom";
 
-export default function Feed() {
-    const {posts, getPosts} = useContext(AppContext);
+export default function FeedByTag() {
+    const {id} = useParams()
+    const {token} = useContext(AppContext)
+    const [postByTag, setPostByTag] = useState([])
+
+    const getPostByTag = async()=>{
+        const res = await fetch(`http://localhost:8080/blog/posts/topic/${id}`, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
+        const data = await res.json()
+        if(data.status){
+            console.log(data.result);
+            setPostByTag(data.result)
+        
+        }
+    }
+
 
     useEffect(()=>{
-        getPosts()
-    }, [])
+        getPostByTag()
+    }, [id])
 
     return (
         <div className="">
@@ -20,7 +38,7 @@ export default function Feed() {
 
                 <div className="pt-12">
                     {
-                        posts.length > 0 ? posts.map((post, index) => (
+                        postByTag ? postByTag.map((post, index) => (
                             <div>
                                 <BlogCard key={index} post={post} />
                             </div>

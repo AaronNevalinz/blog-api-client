@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {
     DropdownMenu,
     DropdownMenuContent, DropdownMenuItem,
@@ -6,17 +6,38 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.jsx";
 import { Input } from "./ui/input";
+import Tags from "./Tags";
+import { useContext } from "react";
+import { AppContext } from "@/context/AppContext";
+import { IoIosLogOut } from "react-icons/io";
+import logo from '../../public/logo.png'
 
 export default function Navbar() {
-    return (
-        <div>
+    const {setUser, setToken} = useContext(AppContext)
+    const navigate = useNavigate()
 
-        <div className="shadow-lg ">
+    const handleLogout = (e)=>{
+        e.preventDefault();
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('token');
+        navigate('/login');
+    }
+
+    return (
+        <div className="fixed w-full z-50 bg-white shadow-lg" >
+
+        <div className="">
             <nav className="flex items-center justify-between max-w-4xl mx-auto py-2">
                 <div className="flex items-center gap-x-2">
-                    <Link className={"bg-gradient-to-r font-bold font-montserrat from-blue-900 to-red-500 inline-block text-transparent bg-clip-text text-2xl"} to="/feed">Reeadsy</Link>
+                    <Link className={"bg-gradient-to-r font-bold font-montserrat from-blue-900 to-red-500 inline-block text-transparent bg-clip-text text-xl"} to="/feed">
+                        <div className="flex items-center gap-x-3">
+                            <img src={logo} alt="" className="w-8" />
+                            <span>Reeadsy<span className="italic font-black text-2xl">!</span></span>
+                        </div>
+                    </Link>
                     <form action="">
-                    <Input placeholder="Search..."/>
+                        <Input placeholder="Search..."/>
                     </form>
                 </div>
                 <ul className={"flex gap-x-8 items-center "}>
@@ -54,15 +75,22 @@ export default function Navbar() {
                                         </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
-                                        <Link to={"/profile"}>
-                                            Logout
-                                        </Link>
+                                        <form action="" onSubmit={handleLogout} className="cursor-pointer">
+                                            <button className="flex items-center gap-x-2">
+                                                <p>logout</p>
+                                                <IoIosLogOut />
+                                            </button>
+                                            
+                                        </form>                                       
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                     </li>
                 </ul>
             </nav>
+            </div>
+            <div className="">
+                <Tags/>
             </div>
         </div>
     )

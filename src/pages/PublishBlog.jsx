@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu.jsx";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip.jsx";
 import axios from "axios";
+import logo from '../../public/logo.png'
 
 export default function PublishBlog(){
     const {token} = useContext(AppContext);
@@ -66,9 +67,13 @@ export default function PublishBlog(){
         e.preventDefault()
         const formData = new FormData();
         formData.append("image", image);
-        formData.append("post", new Blob([JSON.stringify(post)], {type: "application/json"}));
+        formData.append("post", new Blob([JSON.stringify({...post, topics:topics})], {type: "application/json"}));
 
         console.log(formData.get("post"));
+
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+          }
         
         axios.post(
             "http://localhost:8080/blog/add-post", formData, {
@@ -97,7 +102,12 @@ export default function PublishBlog(){
         <div className="">
             <nav className="shadow-md">
                 <div className="flex items-center justify-between max-w-4xl mx-auto py-2">
-                <Link className={"bg-gradient-to-r font-bold font-montserrat from-blue-900 to-red-500 inline-block text-transparent bg-clip-text text-2xl"} to="/feed">Reeadsy</Link>
+                <Link className={"bg-gradient-to-r font-bold font-montserrat from-blue-900 to-red-500 inline-block text-transparent bg-clip-text text-2xl"} to="/feed">
+                    <div className="flex items-center gap-x-3">
+                        <img src={logo} alt="" className="w-8" />
+                        <span>Reeadsy<span className="italic font-black text-2xl">!</span></span>
+                    </div>
+                </Link>
 
                 <ul className={"flex gap-x-6 items-center cursor-pointer"}>
                     <li>

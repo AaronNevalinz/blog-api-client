@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { AppContext } from "@/context/AppContext";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export function LoginForm({className}){
@@ -63,6 +63,7 @@ export function LoginForm({className}){
           </div>
           <Input id="password" onChange={e => setFormData({...formData, password: e.target.value})} type="password"  />
         </div>
+        <p className="text-sm text-right">Don't have an account? <Link to={'/register'} className="underline font-bold">Register</Link></p>
         <Button type="submit" className="w-full">
           Login
         </Button>

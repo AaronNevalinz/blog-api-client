@@ -40,7 +40,7 @@ export default function BlogCard({post}) {
 
 
             <div className={"h-32 col-span-1"}>
-                <img className={"h-full object-cover rounded-lg"} src={post.postImg} alt=""/>
+                <img className={"h-full w-full object-cover rounded-lg"} src={post.postImg} alt=""/>
             </div>
         </div>
     )
