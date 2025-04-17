@@ -5,14 +5,20 @@ import {
     DropdownMenuLabel, DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.jsx";
+import { Input } from "./ui/input";
 
 export default function Navbar() {
     return (
         <div>
-            <nav className="flex items-center justify-between shadow px-36 py-1">
-                <Link to={"/"}>
-                    <h1 className={"text-xl text-slate-800 font-bold uppercase leading-7"}>Reeadsy</h1>
-                </Link>
+
+        <div className="shadow-lg ">
+            <nav className="flex items-center justify-between max-w-4xl mx-auto py-2">
+                <div className="flex items-center gap-x-2">
+                    <Link className={"bg-gradient-to-r font-bold font-montserrat from-blue-900 to-red-500 inline-block text-transparent bg-clip-text text-2xl"} to="/feed">Reeadsy</Link>
+                    <form action="">
+                    <Input placeholder="Search..."/>
+                    </form>
+                </div>
                 <ul className={"flex gap-x-8 items-center "}>
                     <li>
                         <Link to={"/new-story"} className={"flex gap-x-2"}>
@@ -57,6 +63,7 @@ export default function Navbar() {
                     </li>
                 </ul>
             </nav>
+            </div>
         </div>
     )
 }

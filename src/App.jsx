@@ -1,25 +1,25 @@
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Home from "./pages/Home.jsx";
-import Blogs from "@/pages/Blogs.jsx";
+import Feed from "@/pages/Feed.jsx";
 import {Toaster} from "@/components/ui/sonner.jsx";
 import Login from "@/pages/auth/Login.jsx";
 import {useContext} from "react";
 import {AppContext} from "@/context/AppContext.jsx";
 import PublishBlog from "@/pages/PublishBlog.jsx";
-import SingleBlog from "@/pages/SingleBlog.jsx";
+import ArticleView from "@/pages/ArticleView.jsx";
 
 function App() {
     const {user} = useContext(AppContext);
   return (
       <BrowserRouter>
-        <Routes className="font-sans">
+        <Routes className="font-poppins">
           <Route path="/" element={<Home/>} />
-            <Route path="/blogs" element={user ? <Blogs/> : <Login/>} />
+            <Route path="/feed" element={<Feed/>} />
             <Route path={"/new-story"} element={ <PublishBlog/>} />
-            <Route path={"/login"} element={user ? <Blogs /> : <Login/>} />
-            <Route path={"/single-blog"} element={<SingleBlog/>} />
+            <Route path={"/login"} element={user ? <Feed /> :<Login/>} />
+            <Route path={"/article/:id"} element={<ArticleView/>} />
         </Routes>
-          <Toaster />
+        <Toaster />
       </BrowserRouter>
   )
 }

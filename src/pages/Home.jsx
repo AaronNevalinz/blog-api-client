@@ -12,6 +12,7 @@ import {Label} from "@/components/ui/label.jsx";
 import {Button} from "@/components/ui/button.jsx";
 import {useState} from "react";
 import {toast} from "sonner";
+import vid from '../assets/images/homepage-hero.mp4'
 
 export default function Home() {
     const [formData, setFormData] = useState({
@@ -48,31 +49,19 @@ export default function Home() {
         }
     }
     return (
-        <div className="bg-gray-200">
-            <nav className="flex justify-between items-center px-5 py-5 bg-white shadow absolute z-20 top-0 w-full">
+        <div className="">
+            <nav className="flex justify-between items-center px-4 lg:px-32 py-5 shadow absolute z-20 top-0 w-full">
                 <h1>
-                    <Link className={"text-3xl font-black leading-7"} to="/">Reeadsy</Link>
+                    <Link className={"bg-gradient-to-r font-bold font-montserrat from-blue-900 to-red-500 inline-block text-transparent bg-clip-text text-2xl"} to="/feed">Reeadsy</Link>
                 </h1>
                 <ul className={"flex gap-x-10 items-center "}>
-                    <li>
-                        <Link to="/">Our Story</Link>
-                    </li>
-                    <li>
-                        <Link to="/blogs">Our Story</Link>
-                    </li>
-                    <li>
-                        <Link to="/blogs">Membership</Link>
-                    </li>
-                    <li>
-                        <Link to="/">Write</Link>
-                    </li>
                     <li>
                         <Link to="/login">Sign in</Link>
                     </li>
                     <li>
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant="default" className={"bg-black text-slate-200 px-4 py-2 text-lg font-bold cursor-pointer rounded-lg"}>Get Started</Button>
+                                <Button variant="default" className={"bg-blue-700 hover:bg-blue-500 text-slate-100 px-4 py-2 text-lg font-bold cursor-pointer rounded-lg"}>Get Started</Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[525px]">
                                 <form action="" onSubmit={handleRegister}>
@@ -118,6 +107,7 @@ export default function Home() {
                                 </form>
                             </DialogContent>
                         </Dialog>
+                        
                     </li>
                 </ul>
             </nav>
@@ -126,42 +116,16 @@ export default function Home() {
 
 
 
-
-
-            <main className={"relative flex flex-col gap-y-5 justify-center w-full h-screen items-center"}>
-                <h1 className={"text-9xl text-center"}>Human Stories and <br/> Ideas</h1>
-                <p className={"text-2xl"}>A place to read, write and deepen your understanding</p>
-
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="default" className={"bg-black text-slate-200 px-4 py-2 text-lg font-bold cursor-pointer rounded-lg"}>Start Reading</Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                            <DialogTitle>You need to sign up</DialogTitle>
-                            <DialogDescription>
-                                Make changes to your profile here. Click save when you're done.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name" className="text-right">
-                                    Name
-                                </Label>
-                                <Input id="name" placeholder="Pedro Duarte" className="col-span-3" />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="username" className="text-right">
-                                    Username
-                                </Label>
-                                <Input id="username" type={"password"} className="col-span-3" />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button type="submit">Register</Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
+            <main className={"relative flex flex-col gap-y-5 justify-center w-full h-screen items-center px-5"}>
+               <div className="flex flex-col items-center">
+                    <h1 className={"md:text-7xl text-5xl font-bold text-center font-montserrat bg-gradient-to-r from-purple-700 to-black text-transparent bg-clip-text mb-4"}>
+                        Stories That Think. Ideas That Feel.
+                    </h1>
+                    <p className={"md:text-xl text-center"}>A place to read, write and deepen your understanding</p>
+                    <video width="400" className="shadow mt-4 rounded-lg" >
+                        <source src={vid} type="" />
+                    </video>
+               </div>
 
             </main>
         </div>

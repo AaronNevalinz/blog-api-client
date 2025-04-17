@@ -1,17 +1,21 @@
+import { Link } from "react-router-dom"
+
 export default function BlogCard({post}) {
     return (
         <div className="grid grid-cols-3 gap-4 items-center border-b mt-8 border-gray-200 pb-6">
             <div className="col-span-2">
-                <div className="flex items-center gap-x-2 mb-1">
-                    <div className={"bg-orange-600 h-5 w-5 rounded-full"}></div>
-                    <h1 className={"text-xs font-medium text-gray-500"}>{post.username}</h1>
-                </div>
-                <div>
-                    <h1 className={"text-lg font-bold"}>{post.title.substring(0, 10)}</h1>
-                    <p className={"text-gray-500 my-1"}>
-                        {post.content.substring(0, 100)}...
-                    </p>
-                </div>
+                <Link to={`/article/${post.postId}`}>
+                    <div className="flex items-center gap-x-2 mb-1">
+                        <div className={"bg-orange-600 h-5 w-5 rounded-full"}></div>
+                        <h1 className={"text-xs font-medium text-gray-500"}>{post.username}</h1>
+                    </div>
+                    <div>
+                        <h1 className={"text-xl font-medium font-poppins"}>{post.title}</h1>
+                        <p className={"text-gray-500 my-1 font-poppins text-sm"}>
+                            {post.content.substring(0, 100)}...
+                        </p>                    
+                     </div>
+                </Link >
                 <div className={"flex justify-between items-center text-gray-500 pt-1"}>
                     <div className="flex gap-x-4 items-center text-gray-500 text-sm font-medium">
                         <p>Mar 29</p>
