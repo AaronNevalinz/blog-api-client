@@ -77,7 +77,7 @@ export default function ArticleView(){
             const data = res.json()
             if(data.status){
                 setPostComments(prev => [data.comment, ...prev])
-                setComment("")
+                setComment({comment:""})
                 toast.success("Comment added successfully")
             }
         }).catch((e) => {

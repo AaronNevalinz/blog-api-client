@@ -1,15 +1,4 @@
 import {Link} from "react-router-dom";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription, DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from "@/components/ui/dialog.jsx";
-import {Input} from "@/components/ui/input.jsx";
-import {Label} from "@/components/ui/label.jsx";
-import {Button} from "@/components/ui/button.jsx";
 import vid from '../assets/images/homepage-hero.mp4'
 import logo from '../../public/logo.png'
 

@@ -39,9 +39,9 @@ export default function BlogCard({post}) {
             </div>
 
 
-            <div className={"h-32 col-span-1"}>
+            <Link to={`/article/${post.postId}`} className={"h-32 col-span-1"}>
                 <img className={"h-full w-full object-cover rounded-lg"} src={post.postImg} alt=""/>
-            </div>
+            </Link>
         </div>
     )
 }
