@@ -35,6 +35,7 @@ export function LoginForm({className}){
       if(data.status){
           setUser(data.user);
           localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user))
           setToken(data.token);
           navigate('/feed');
           toast.success("Login successful!");
@@ -64,7 +65,7 @@ export function LoginForm({className}){
           <Input id="password" onChange={e => setFormData({...formData, password: e.target.value})} type="password"  />
         </div>
         <p className="text-sm text-right">Don't have an account? <Link to={'/register'} className="underline font-bold">Register</Link></p>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full cursor-pointer">
           Login
         </Button>
       </div>

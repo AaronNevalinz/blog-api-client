@@ -9,6 +9,9 @@ export const AppProvider = ({ children }) => {
     const [tags, setTags] = useState([]);
     const [loggedInUserPosts, setLoggedInUserPosts] = useState([])
 
+
+        const [loggedUserProfile, setLoggedInUserProfile] = useState(null)
+
     const getPosts = async () => {
         const response = await fetch("http://127.0.0.1:8080/blog/posts-summary", {
             headers: {
@@ -44,6 +47,33 @@ export const AppProvider = ({ children }) => {
             setTags(data.topics)
         }
     }
+    useEffect(()=>{
+        const storedToken = localStorage.getItem('token')
+        const storedUser = localStorage.getItem('user')
+        if(storedToken && storedUser) {
+            setToken(storedToken)
+            setUser(storedUser)
+        }
+    }, [])
+
+     const getUserProfile = async ()=>{
+            const res = await fetch(`http://localhost:8080/profile/get-user/profile/`,{
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            const data = await res.json()
+            if(data.status){
+                console.log(data.result);
+                setLoggedInUserProfile(data.result)
+            }
+        }
+    
+        useEffect(()=>{
+            getUserPosts()
+            getUserProfile()
+        }, [])
+
     useEffect(() => {
         if(token){
             getPosts();
@@ -54,7 +84,7 @@ export const AppProvider = ({ children }) => {
 
 
     return (
-        <AppContext.Provider value={{user, tags, getUserPosts, loggedInUserPosts, setUser, getPosts, posts, setToken, token}}>
+        <AppContext.Provider value={{user, getUserProfile, loggedUserProfile, tags, getUserPosts, loggedInUserPosts, setUser, getPosts, posts, setToken, token}}>
             {children}
         </AppContext.Provider>
     )

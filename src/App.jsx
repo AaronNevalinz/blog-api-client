@@ -10,6 +10,8 @@ import ArticleView from "@/pages/ArticleView.jsx";
 import FeedByTag from "./pages/FeedByTag.jsx";
 import Register from "./pages/auth/Register.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
+import InfiniteScroll from "./pages/InfiniteScroll.jsx";
+import Profile from "./pages/Profile.jsx";
 
 function App() {
     const {user} = useContext(AppContext);
@@ -23,7 +25,9 @@ function App() {
             <Route path={"/login"} element={user ? <Feed /> :<Login/>} />
             <Route path='/register' element={<Register/>}/>
             <Route path={"/article/:id"} element={user ? <ArticleView/>:<Login/>} />
-            <Route path="/profile" element={<UserProfile/>} />
+            <Route path="/profile" element={user? <UserProfile/>:<Login/>} />
+            <Route path="/profile/:username" element={user? <Profile/>:<Login/>} />
+            <Route path="/scroll" element={<InfiniteScroll/>} />
         </Routes>
         <Toaster />
       </BrowserRouter>
