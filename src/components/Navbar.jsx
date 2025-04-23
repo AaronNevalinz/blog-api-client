@@ -14,14 +14,16 @@ import logo from '../../public/logo.png'
 import userLogo from '../../public/user.jpg'
 
 export default function Navbar() {
-    const {setUser, setToken} = useContext(AppContext)
+    const {setUser, setToken, setLoggedInUserProfile, loggedUserProfile} = useContext(AppContext)
     const navigate = useNavigate()
 
     const handleLogout = (e)=>{
         e.preventDefault();
         setUser(null);
         setToken(null);
+        setLoggedInUserProfile(null)
         localStorage.removeItem('token');
+        localStorage.removeItem('user')
         navigate('/login');
     }
 
@@ -55,7 +57,14 @@ export default function Navbar() {
 
                             <DropdownMenu className={""}>
                                 <DropdownMenuTrigger>
-                                    <img src={userLogo} className="w-12 cursor-pointer" alt="" />
+                                    {
+                                        loggedUserProfile ?
+                                            <div className={"w-[2.5rem] cursor-pointer h-[2.5rem] shadow-sm rounded-full"}>
+                                                <img src={loggedUserProfile.imgUrl} className='h-full w-full object-cover rounded-full' alt="" />
+                                            </div> : 
+                                            <img src={userLogo} className="w-12 cursor-pointer" alt="" />
+                                    }
+                                    
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
                                     <DropdownMenuLabel>My Account</DropdownMenuLabel>

@@ -30,12 +30,10 @@ export default function ArticleView(){
             }
         })
 
-        const data = await res.json();
+        const data = await res.json()
 
         if(res.ok){
-            setArticle(data.result);
-            await console.log(article);
-            
+            setArticle(data.result);           
 
         } else{
             console.log("Lil summm happened");
@@ -54,7 +52,6 @@ export default function ArticleView(){
 
             if(data.status){
                 setPostComments(data.comments);
-                console.log("Comments", data.comments);    
             }
 
         }catch(err){
@@ -90,13 +87,11 @@ export default function ArticleView(){
 
 
     useEffect(()=>{
-        console.log("Post comments: ", postComments);
         getPost()
         getPostComments()
     }, [refetch])
 
     useEffect(()=>{
-        console.log("Post Comments: ", postComments);
         
     }, [postComments])
     
@@ -131,13 +126,13 @@ export default function ArticleView(){
                             <div className="flex gap-x-4 text-sm items-center">
                                 <span className="flex items-center gap-x-1">
                                     <PiHandsClapping size={26} className="cursor-pointer"/>
-                                    <span className="cursor-pointer">Likes</span>
+                                    <span className="cursor-pointer">{article ? article.likesCount:""} Like(s)</span>
                                 </span>
                                 <span >
                                     <Sheet>
                                         <SheetTrigger className="flex items-center gap-x-1 cursor-pointer">
                                             <FaRegComment size={24} />
-                                            comments
+                                            <span>{article ? article.commentsCount:""} comments</span>
                                         </SheetTrigger>
                                         <SheetContent>
                                            <SheetHeader>Responses</SheetHeader>
@@ -160,20 +155,20 @@ export default function ArticleView(){
 
                                                     <div className="flex flex-col gap-y-4 ">
                                                         {
-                                                            postComments.map((comment, index)=>(
+                                                            postComments.map((postComment, index)=>(
                                                                 <div key={index}>
                                                             <div className="flex items-center gap-x-2">
                                                                 <Avatar>
-                                                                    <AvatarImage src="https://github.com/shadcn.png" />
+                                                                    <AvatarImage src={postComment.imgUrl} />
                                                                     <AvatarFallback>CN</AvatarFallback>
                                                                 </Avatar>
                                                                 <div>
-                                                                    <h1 className="text-xs font-bold font-poppins">{comment.user?comment.user.username:""}</h1>
+                                                                    <h1 className="text-xs font-bold font-poppins">{postComment?postComment.username:""}</h1>
                                                                     <p className="text-xs">3 hours ago</p>
                                                                 </div>
                                                             </div>
                                                             <p className="p-2">
-                                                                {comment.comment}
+                                                                {postComment.comment}
                                                             </p>
                                                         </div>
                                                             ))

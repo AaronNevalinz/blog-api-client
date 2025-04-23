@@ -1,37 +1,89 @@
 import Navbar from '@/components/Navbar'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import userLogo from '../../public/user.jpg'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Label } from '@radix-ui/react-dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AppContext } from '@/context/AppContext'
 import BlogCard from '@/components/BlogCard'
 import { Textarea } from '@/components/ui/textarea'
+import { toast } from 'sonner'
+import axios from 'axios'
 
 export default function UserProfile() {
-    const {user, loggedInUserPosts, getUserPosts} = useContext(AppContext)
+    const {token, loggedInUserPosts, loggedUserProfile, getUserProfile, getUserPosts} = useContext(AppContext)
+    const [profile, setProfile] = useState({
+        bio:"",
+        displayName:""
+    })
+    const [preview, setPreview] = useState(null);
+    const [profileImage, setProfileImage] = useState(null)
+
+    const handleFileChange = (e)=>{
+        const file = e.target.files[0];
+        if (!file) return;
+        setProfileImage(file);
+
+        const reader = new FileReader();
+        reader.onloadend = ()=>setPreview(reader.result);
+        reader.readAsDataURL(file);
+    }
+
+    const handleSetProfile = async (e)=>{
+        e.preventDefault()
+        const formData = new FormData()
+        formData.append('file', profileImage)
+        formData.append('profile', new Blob ([JSON.stringify(profile)], {type: "application/json"}))
+        axios.post("http://localhost:8080/profile/set-profile", formData, {
+                headers:{
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                }
+            }).then((res)=>{
+                toast.success("Profile updated successfully");
+                console.log(res.data);
+                // navigate("/feed")
+            }).catch((error)=>{
+                toast.error("Error updating profile");
+                console.log(error);
+            })
+    }
+
+
     useEffect(()=>{
         getUserPosts()
+        getUserProfile()
     }, [])
   return (
     <div>
         <Navbar/>
         <main className='max-w-3xl mx-auto pt-[120px]'>
-            <div className="flex flex-col items-center">
-                <img src={userLogo} className='w-32' alt="" />
-                <h1 className='text-3xl font-montserrat text-center font-bold'>{user ? user.username : <p>Aaron Dinin, PhD</p>}</h1>
+            <div className="flex flex-col items-center my-8">
+               {
+                preview ? 
+                <div className={"w-[6rem] h-[6rem] shadow-sm rounded-full"}>
+                    <img className={"h-full w-full object-cover rounded-full"} src={preview} alt=""/>
+                </div>
+                :  (loggedUserProfile? 
+                        <div className={"w-[6rem] h-[6rem] shadow-sm rounded-full"}>
+                            <img className='h-full w-full object-cover rounded-full'  src={loggedUserProfile.imgUrl} alt="" /> 
+                        </div> : 
+                        <img src={userLogo} className='w-32' alt="" />)
+               }
+                <h1 className='text-3xl font-montserrat text-center font-bold'>
+                    {loggedUserProfile ? loggedUserProfile.displayName :""}
+                </h1>
+                <p className='text-sm underline text-blue-700 font-bold -my-1'><span>{loggedUserProfile ?<p> @{loggedUserProfile.username} </p>: ""}</span></p>
                 <p className='max-w-lg text-center'>
-                    I teach entrepreneurship at Duke. Software Engineer. PhD in English. I write about the mistakes entrepreneurs make since I’ve made plenty. More @ aarondinin.com
+                    {loggedUserProfile ? loggedUserProfile.bio :""}
                 </p>
             </div>
 
-        <Tabs defaultValue="account" className="mt-4">
+        <Tabs defaultValue="stories" className="mt-4">
             <TabsList className="grid w-full grid-cols-3 bg-slate-300">
-                <TabsTrigger value="stories" className={"cursor-pointer"}>Your Stories</TabsTrigger>
-                <TabsTrigger value="account" className={"cursor-pointer"}>Your Bookmarks</TabsTrigger>
+                <TabsTrigger value="stories" className={"cursor-pointer"}>Your BookMarks</TabsTrigger>
+                <TabsTrigger value="account" className={"cursor-pointer"}>Your Stories</TabsTrigger>
                 <TabsTrigger value="password" className={"cursor-pointer"}>About</TabsTrigger>
             </TabsList>
             <TabsContent value="account" className={" "}>
@@ -73,11 +125,28 @@ export default function UserProfile() {
             <TabsContent value="password" className={" mt-2"}>
                 <div className=''>
                     <h1 className='text-xl font-bold'>Edit Profile</h1>
-                    <form className='border border-gray-300 p-8 rounded-lg  space-y-2'>
-                        <div className='w-16 h-16  bg-green-600 rounded-full'></div>
-                        <Input type={"text"} className={"w-full"} placeholder="Display Name"/>
-                        <Textarea type={"text"} placeholder="Bio"/>
-                        <Button>Update Profile</Button>
+                    <form className='border border-gray-300 p-8 rounded-lg  space-y-2' onSubmit={handleSetProfile}>
+                    {
+                        preview && (
+                            <div className={"w-[6rem] h-[6rem] shadow-sm rounded-full"}>
+                                <img className={"h-full w-full object-cover rounded-full"} src={preview} alt=""/>
+                            </div>
+                        )
+                        }
+                        <label className={"mt-1 border border-gray-700 p-1 inline-block rounded-full ml-2 cursor-pointer "}>
+                            <div className="flex gap-x-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                                </svg>
+                                image
+                            </div>
+                            <input type="file" className={"hidden"} accept={"image/*"} onChange={handleFileChange} />
+                        </label>
+                      
+                        <Input type={"text"} onChange={(e)=> setProfile({...profile, displayName:e.target.value})} className={"w-full"} placeholder="Display Name"/>
+                        <Textarea type={"text"} onChange={(e)=> setProfile({...profile, bio:e.target.value})}  placeholder="Bio"/>
+                        <Button className={"cursor-pointer"}>Update Profile</Button>
                     </form>
                 </div>
                 <div className='my-5 space-y-4'>

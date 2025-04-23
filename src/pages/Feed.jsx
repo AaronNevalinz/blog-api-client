@@ -5,10 +5,11 @@ import {AppContext} from "@/context/AppContext.jsx";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Feed() {
-    const {posts, getPosts} = useContext(AppContext);
+    const {posts, getUserProfile, getPosts} = useContext(AppContext);
 
     useEffect(()=>{
         getPosts()
+        getUserProfile()
     }, [])
 
     return (
