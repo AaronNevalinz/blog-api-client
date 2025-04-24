@@ -34,11 +34,15 @@ export function LoginForm({className}){
       console.log(data)
       if(data.status){
           setUser(data.user);
+          console.log(data.user);
+          
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user))
           setToken(data.token);
           navigate('/feed');
           toast.success("Login successful!");
+      } else {
+        toast.error(`${data.message}: Please try again : (`)
       }
       } catch(error){
         console.log(error);

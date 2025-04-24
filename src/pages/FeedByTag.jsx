@@ -33,7 +33,7 @@ export default function FeedByTag() {
         <div className="">
             <Navbar/>
 
-            <main className="max-w-2xl mx-auto pt-[63px]">
+            <main className="max-w-4xl mx-auto pt-[63px]">
                 
 
                 <div className="pt-12">

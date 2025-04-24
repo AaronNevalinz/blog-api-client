@@ -12,6 +12,7 @@ import Register from "./pages/auth/Register.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
 import InfiniteScroll from "./pages/InfiniteScroll.jsx";
 import Profile from "./pages/Profile.jsx";
+import SearchResults from "./pages/SearchResults.jsx";
 
 function App() {
     const {user} = useContext(AppContext);
@@ -28,8 +29,36 @@ function App() {
             <Route path="/profile" element={user? <UserProfile/>:<Login/>} />
             <Route path="/profile/:username" element={user? <Profile/>:<Login/>} />
             <Route path="/scroll" element={<InfiniteScroll/>} />
+            <Route path="/search" element={<SearchResults />} />
         </Routes>
-        <Toaster />
+        <Toaster 
+          // position="bo-center"
+          toastOptions={{
+            style: {
+              background: '#2C3930',
+              color: '#DCD7C9',
+              border: '1px solid #3F4F44',
+              padding: '20px 24px',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: '500',
+              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.7)',
+            },
+            success: {
+              iconTheme: {
+                primary: '#10b981',
+                secondary: '#ecfdf5',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fee2e2',
+              },
+            },
+          }}
+        />
+
       </BrowserRouter>
   )
 }

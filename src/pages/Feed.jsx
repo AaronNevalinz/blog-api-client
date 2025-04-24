@@ -16,7 +16,7 @@ export default function Feed() {
         <div className="">
             <Navbar/>
 
-            <main className="max-w-2xl mx-auto pt-[63px]">
+            <main className="max-w-4xl px-6 lg:px-0 mx-auto pt-[63px]">
                 
 
                 <div className="pt-12">
