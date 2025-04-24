@@ -19,6 +19,7 @@ export default function UserProfile() {
     })
     const [preview, setPreview] = useState(null);
     const [profileImage, setProfileImage] = useState(null)
+    const [bookmarks, setBookMarks] = useState([])
 
     const handleFileChange = (e)=>{
         const file = e.target.files[0];
@@ -50,15 +51,40 @@ export default function UserProfile() {
             })
     }
 
+    const getUserBookMarks = async ()=>{
+        const res = await fetch(`http://localhost:8080/blog/bookmarks/${loggedUserProfile.userId}`, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
+        const data = await res.json()
+        console.log(data);        
+        
+        if(data.status){
+            setBookMarks(data.result)
+            console.log(bookmarks);
+            
+        }
+
+    }
 
     useEffect(()=>{
         getUserPosts()
         getUserProfile()
     }, [])
+    useEffect(() => {
+        if (loggedUserProfile?.userId) {
+          getUserBookMarks();
+        }
+      }, [loggedUserProfile?.userId]);
+      
+
+
+
   return (
     <div>
         <Navbar/>
-        <main className='max-w-3xl mx-auto pt-[120px]'>
+        <main className='max-w-4xl mx-auto pt-[120px]'>
             <div className="flex flex-col items-center my-8">
                {
                 preview ? 
@@ -167,9 +193,40 @@ export default function UserProfile() {
                 </div>
             </TabsContent>
             <TabsContent value="stories">
-                <div className='text-center mt-8'>
-                    <p>Work and get some stories homie</p>
-                </div>
+                {
+                    bookmarks.length > 0 ? bookmarks.map((post, index) => (
+                        <div>
+                            <BlogCard key={index} post={post} />
+                        </div>
+                        )) : (
+                            [1,2,3].map((key)=>(
+                                <div key={key} className="grid grid-cols-3 gap-4 items-center border-b mt-8 border-gray-200 pb-6">
+                                <div className="col-span-2">
+                                    <div className="flex items-center gap-x-2 mb-1">
+                                        <Skeleton className="h-5 w-5 rounded-full bg-slate-300" />
+                                        <Skeleton className="h-4 w-24 bg-slate-300" />
+                                    </div>
+                                    <Skeleton className="h-6 w-3/4 mb-2 bg-slate-300" />
+                                    <Skeleton className="h-4 w-full mb-2 bg-slate-300" />
+                                    <Skeleton className="h-4 w-5/6 mb-4 bg-slate-300" />
+                                    <div className="flex justify-between items-center text-gray-500 pt-1">
+                                        <div className="flex gap-x-4 items-center text-sm font-medium">
+                                            <Skeleton className="h-4 w-12 bg-slate-300" />
+                                            <div className="flex items-center gap-x-1">
+                                                <Skeleton className="h-5 w-5 bg-slate-300" />
+                                                <Skeleton className="h-4 w-16 bg-slate-300" />
+                                            </div>
+                                        </div>
+                                        <Skeleton className="h-6 w-6 bg-slate-300" />
+                                    </div>
+                                </div>
+
+                                <div className="h-32 col-span-1">
+                                    <Skeleton className="h-full w-full rounded-lg bg-slate-300" />
+                                </div>
+                            </div>
+                    )))
+                }
             </TabsContent>
         </Tabs>
         </main>

@@ -50,9 +50,10 @@ export const AppProvider = ({ children }) => {
     useEffect(()=>{
         const storedToken = localStorage.getItem('token')
         const storedUser = localStorage.getItem('user')
+               
         if(storedToken && storedUser) {
             setToken(storedToken)
-            setUser(storedUser)
+            setUser(JSON.parse(storedUser));
         }
     }, [])
 
@@ -64,7 +65,6 @@ export const AppProvider = ({ children }) => {
             })
             const data = await res.json()
             if(data.status){
-                console.log(data.result);
                 setLoggedInUserProfile(data.result)
             }
         }
