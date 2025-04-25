@@ -175,7 +175,7 @@ export default function BlogCard({post}) {
                 <span className="text-black">{likeCount} likes</span>
               </p>
             </div>
-            <div className="cursor-pointer flex items-center  gap-x-2">
+            <div className="cursor-pointer flex items-center  gap-x-4">
               {user.username === post.username && (
                 <Dialog>
                   <DialogTrigger asChild>
@@ -205,6 +205,9 @@ export default function BlogCard({post}) {
                     </div>
                   </DialogContent>
                 </Dialog>
+              )}
+              {user.username === post.username && (
+                <Link to={`/edit/${post.postId}`} className="text-blue-500 font-bold underline">Edit</Link>
               )}
               <form action="" onSubmit={handleBookMarkPost}>
                 <button

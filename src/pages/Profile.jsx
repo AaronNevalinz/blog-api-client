@@ -40,7 +40,7 @@ export default function Profile() {
   return (
       <div>
           <Navbar/>
-          <main className='max-w-3xl mx-auto pt-[120px]'>
+          <main className='max-w-4xl mx-auto pt-[120px]'>
               <div className="flex flex-col items-center my-8">
                  {profile?<div className='w-24 h-24'>
                     <img src={profile.imgUrl} className='rounded-full object-cover w-full h-full' alt="" />
@@ -99,7 +99,7 @@ export default function Profile() {
               </TabsContent>
               <TabsContent value="stories">
                   <div className='text-center mt-8'>
-                      <p>Work and get some stories homie</p>
+                      <p>You don't have any bookmarked stories</p>
                   </div>
               </TabsContent>
           </Tabs>
