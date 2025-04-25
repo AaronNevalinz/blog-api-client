@@ -1,9 +1,7 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "@/context/AppContext.jsx";
 import { toast } from "sonner";
-import { FaSquarePen } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
-import userLogo from '../../public/user.jpg'
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,47 +14,43 @@ import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
 } from "@/components/ui/tooltip.jsx";
 import axios from "axios";
 import logo from "../../public/logo.png";
 import { IoIosLogOut } from "react-icons/io";
+import userLogo from "../../public/user.jpg";
 
-export default function PublishBlog() {
+export default function EditArticle() {
+  const { id } = useParams();
   const {
     token,
     loggedUserProfile,
     setUser,
-    setToken,
     setLoggedInUserProfile,
+    setToken,
   } = useContext(AppContext);
   const navigate = useNavigate();
   const [preview, setPreview] = useState(null);
   const textareaRef = useRef(null);
-  const [input, setInput] = useState("");
   const formRef = useRef(null);
-  const [topics, setTopics] = useState([]);
   const [image, setImage] = useState(null);
-  const [post, setPost] = useState({
-    title: "",
-    content: "",
-  });
+  const [article, setArticle] = useState({});
 
-  const addTag = (e) => {
-    if (e.key === "Enter" && input.trim()) {
-      e.preventDefault();
-      if (topics.length >= 5) {
-        toast.error("You can only add up to 5 tags");
-      }
-      if (topics.length < 5 && !topics.includes(input.trim())) {
-        setTopics([...topics, { name: input.trim() }]);
-      }
-      setInput("");
+  const getPost = async () => {
+    const res = await fetch(`http://localhost:8080/blog/post/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+    console.log(data);
+
+    if (res.ok) {
+      setArticle(data.result);
+    } else {
+      console.log("Lil summm happened");
     }
-  };
-  // remove tag
-  const removeTag = (index) => {
-    setTopics(topics.filter((_, i) => i !== index));
   };
 
   const handleFileChange = (e) => {
@@ -71,49 +65,37 @@ export default function PublishBlog() {
 
   const handleStoryChange = () => {
     const el = textareaRef.current;
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight}px`;
-  };
-
-  const handleLogout = (e) => {
-    e.preventDefault();
-    setUser(null);
-    setToken(null);
-    setLoggedInUserProfile(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
+    if (el) {
+      el.style.height = "auto";
+      el.style.height = `${el.scrollHeight}px`;
+    }
   };
 
   // form submissions
-  const handleSubmit = async (e) => {
+  const handleEditArticle = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("image", image);
     formData.append(
       "post",
-      new Blob([JSON.stringify({ ...post, topics: topics })], {
-        type: "application/json",
-      })
+      new Blob([JSON.stringify(article)], { type: "application/json" })
     );
 
-    console.log(formData.get("post"));
 
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
 
     axios
-      .post("http://localhost:8080/blog/add-post", formData, {
+      .put(`http://localhost:8080/blog/update-post/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
-        toast.success("Post published successfully");
-        console.log(res.data);
-        navigate("/feed");
+        navigate(0);
+        toast.success("Post Updated successfully");
       })
       .catch((error) => {
         toast.error("Error publishing post");
@@ -126,10 +108,22 @@ export default function PublishBlog() {
       formRef.current.requestSubmit();
     }
   };
+  const handleLogout = (e) => {
+    e.preventDefault();
+    setUser(null);
+    setToken(null);
+    setLoggedInUserProfile(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+  useEffect(() => {
+    getPost();
+  }, []);
 
   return (
     <div className="">
-      <nav className="shadow-md">
+      <nav className="shadow-md fixed w-full bg-white">
         <div className="flex items-center justify-between max-w-4xl mx-auto py-2">
           <Link
             className={
@@ -153,8 +147,11 @@ export default function PublishBlog() {
                   "bg-blue-900 cursor-pointer px-4 py-1 rounded-full text-slate-200"
                 }
               >
-                publish
+                Save Changes
               </button>
+            </li>
+            <li>
+              <p>Profile</p>
             </li>
             <li>
               <DropdownMenu className={""}>
@@ -210,72 +207,27 @@ export default function PublishBlog() {
 
       <div
         className={
-          "max-w-4xl px-4 md:px-0 mx-auto w-full mt-5 text-center font-poppins"
+          "max-w-4xl px-4  mx-auto w-full text-center font-poppins pt-24"
         }
       >
-        <h1 className="text-2xl font-bold">CREATE ARTICLE</h1>
+        <h1 className="text-2xl font-bold">EDIT ARTICLE</h1>
       </div>
       <form
         className={"max-w-4xl px-4 md:px-0 mx-auto w-full mt-5"}
         ref={formRef}
-        onSubmit={handleSubmit}
+        onSubmit={handleEditArticle}
       >
+        <label htmlFor="" className="text-2xl text-blue-800 font-bold">
+          Edit title
+        </label>
         <input
           type="text"
-          onChange={(e) => setPost({ ...post, title: e.target.value })}
+          value={article.title}
+          onChange={(e) => setArticle({ ...article, title: e.target.value })}
           className="border-none font-bold text-4xl tracking-wider placeholder:font-medium text-food w-full px-2 py-2 text-gray-700 font-poppins outline-none"
           placeholder="Enter Article title"
         />
-        <div className="flex items-center gap-x-2 my-2">
-          <div className={"flex items-center gap-x-2"}>
-            <label
-              className={
-                "border inline-block border-gray-700 p-0.5 rounded-full ml-2 cursor-pointer"
-              }
-            >
-              <div className="flex items-center gap-x-1 px-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-                <p className={"text-sm"}>Add Tags</p>
-              </div>
-            </label>
-          </div>
-          {topics.map((topic, index) => (
-            <div
-              key={index}
-              className="flex items-center bg-blue-100 text-blue-800 text-sm font-medium mr-1 px-2 py-1 rounded"
-            >
-              {topic.name}
-              <button
-                onClick={() => removeTag(index)}
-                className="ml-1 text-blue-500 hover:text-blue-700"
-              >
-                &times;
-              </button>
-            </div>
-          ))}
 
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={addTag}
-            placeholder={"Add tag"}
-            className={"border bg-slate-100 pl-4 py-1 rounded-md"}
-          />
-        </div>
         <div>
           <TooltipProvider>
             <Tooltip>
@@ -285,7 +237,7 @@ export default function PublishBlog() {
                   "mt-1 border border-gray-700 p-1 inline-block rounded-full ml-2 cursor-pointer "
                 }
               >
-                <div className="flex gap-x-1">
+                <div className="flex gap-x-1 px-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -305,7 +257,7 @@ export default function PublishBlog() {
                       d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
                     />
                   </svg>
-                  image
+                  Edit Image
                 </div>
                 <input
                   type="file"
@@ -321,7 +273,7 @@ export default function PublishBlog() {
             </Tooltip>
           </TooltipProvider>
           {preview && (
-            <div className={"w-full h-[16rem]"}>
+            <div className={"w-full h-[18rem] my-6"}>
               <img
                 className={"h-full w-full object-cover"}
                 src={preview}
@@ -331,12 +283,15 @@ export default function PublishBlog() {
           )}
         </div>
 
+        <label className="text-2xl text-blue-800 font-bold " htmlFor="">
+          Edit Article Content
+        </label>
         <textarea
           ref={textareaRef}
-          onChange={(e) => setPost({ ...post, content: e.target.value })}
+          value={article.content}
+          onChange={(e) => setArticle({ ...article, content: e.target.value })}
           onInput={handleStoryChange}
-          rows={"1"}
-          className="border-none text-lg text-food w-full mt-2 px-4 py-2 overflow-hidden resize-none outline-none"
+          className="border rounded-xl border-gray-400 text-lg text-food w-full h-[50vh] mt-2 px-4 py-2 overflow-hidde resize-none outline-none"
           placeholder="Tell your Story..."
         />
       </form>

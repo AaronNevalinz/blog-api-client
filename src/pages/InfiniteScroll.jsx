@@ -52,7 +52,7 @@ export default function InfiniteScroll() {
   <div className="">
               <Navbar/>
   
-              <main className="max-w-2xl mx-auto pt-[63px]">
+              <main className="max-w-4xl mx-auto pt-[63px]">
                   
   
                   <div className="pt-12">
@@ -94,7 +94,7 @@ export default function InfiniteScroll() {
                 ))
             )
         }
-        {!hasNext && <p style={{ textAlign: "center" }}>No more posts</p>}
+        {!hasNext && <p className='text-center my-4'>No more posts</p>}
       </div>
     </main>
 </div>
